@@ -1,6 +1,4 @@
--- assert lua script
--- ===================|
--- note to escape path for winodws (c:\\users\\user\\...)
+-- https://github.com/itKelis/MPV-Play-BiliBili-Comments
 
 local utils = require 'mp.utils'
 local options = require 'mp.options'
@@ -73,7 +71,7 @@ end
 -- load function
 local function load_danmu(danmu_file)
 	if not file_exists(danmu_file) then return end
-	log('开火')
+	-- log('开火')
 	danmu_open = true
 	-- 如果可用将弹幕挂载为次字幕
 	if sec_sub_ass_override then
@@ -155,7 +153,7 @@ local function assprocess()
 	-- '-r',
 	-- cid,
 	-- }
-	log('弹幕正在上膛')
+	-- log('弹幕正在上膛')
 	-- run python to get comments
 	mp.command_native_async({
 		name = 'subprocess',
@@ -178,7 +176,7 @@ end
 function asstoggle(event)
 	if not file_exists(danmu_file) then return end
 	if danmu_open then
-		log('停火')
+		-- log('停火')
 		danmu_open = false
 		if sec_sub_ass_override then
 			if event then
