@@ -65,13 +65,13 @@ end
 local function log(string,secs)
 	secs = secs or 2.5
 	mp.msg.warn(string)
-	mp.osd_message(string,secs)
+	-- mp.osd_message(string,secs)
 end
 
 -- load function
 local function load_danmu(danmu_file)
 	if not file_exists(danmu_file) then return end
-	-- log('开火')
+	log('开火')
 	danmu_open = true
 	-- 如果可用将弹幕挂载为次字幕
 	if sec_sub_ass_override then
@@ -80,6 +80,9 @@ local function load_danmu(danmu_file)
 		mp.set_property_native("secondary-sub-ass-override", "yes")
 		mp.set_property_native("secondary-sid", sub_count)
 		mp.set_property_native("secondary-sub-visibility", true)
+		if mp.get_property_number('fps', 16) < 45 then
+			mp.commandv('vf', 'append', '@danmu:lavfi="fps=fps=60:round=down"')
+		end
 	else
 		-- 挂载subtitles滤镜，注意加上@标签，这样即使多次调用也不会重复挂载，以最后一次为准
 		mp.commandv('vf', 'append', '@danmu:subtitles=filename="'..danmu_file..'"')
@@ -153,7 +156,7 @@ local function assprocess()
 	-- '-r',
 	-- cid,
 	-- }
-	-- log('弹幕正在上膛')
+	log('弹幕正在上膛')
 	-- run python to get comments
 	mp.command_native_async({
 		name = 'subprocess',
@@ -176,7 +179,7 @@ end
 function asstoggle(event)
 	if not file_exists(danmu_file) then return end
 	if danmu_open then
-		-- log('停火')
+		log('停火')
 		danmu_open = false
 		if sec_sub_ass_override then
 			if event then
