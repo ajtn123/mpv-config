@@ -64,7 +64,7 @@ end
 -- Log function: log to both terminal and MPV OSD (On-Screen Display)
 local function log(string,secs)
 	secs = secs or 2.5
-	mp.msg.warn(string)
+	mp.msg.info(string)
 	-- mp.osd_message(string,secs)
 end
 
