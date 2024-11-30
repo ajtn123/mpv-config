@@ -1,5 +1,13 @@
 local mp = require 'mp'
 
+function TableLeng(t)
+    local leng = 0
+    for k, v in pairs(t) do
+        leng = leng + 1
+    end
+    return leng;
+end
+
 function Info(name, value)
     if type(value) == "boolean" then
         if value then
@@ -21,7 +29,7 @@ function ShowMsg(arg, property_value)
         local pos = 0
         for index, value in pairs(property_value) do
             pos = pos + 1
-            if pos == property_value.leng then
+            if pos == TableLeng(property_value) then
                 Info(' └' .. index, value)
             else
                 Info(' ├' .. index, value)
