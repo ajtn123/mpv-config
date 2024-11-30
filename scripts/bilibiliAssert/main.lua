@@ -79,11 +79,7 @@ local function assprocess()
 	local path = mp.get_property("path")
 	if path and not path:find('^%a[%w.+-]-://') and not (path:find('bilibili.com') or path:find('bilivideo.com'))
 	then return end
-	-- check if filepahth to python exist
-	if not o.python_path == "python" and not file_exists(o.python_path) then
-		log('未找到 Python 可执行文件: ' .. o.python_path)
-		return
-	end
+
 	-- get video cid
 	local cid = mp.get_opt('cid')
 	if cid == nil and path and path:find('^%a[%w.+-]-://') then
@@ -152,6 +148,9 @@ function asstoggle(event)
 
 	if event then
 		log('文件结束')
+		if file_exists(danmu_file) then
+			os.remove(danmu_file)
+		end
 		danmu_file = nil
 		danmu_open = false
 		mp.set_property_native("secondary-sub-visibility", sec_sub_visibility)
@@ -179,9 +178,4 @@ end
 
 mp.add_key_binding(nil, 'toggle', asstoggle)
 mp.register_event("file-loaded", assprocess)
-mp.register_event("end-file", function()
-	asstoggle(true)
-	if file_exists(danmu_file) then
-		os.remove(danmu_file)
-	end
-end)
+mp.register_event("end-file", function() asstoggle(true) end)
