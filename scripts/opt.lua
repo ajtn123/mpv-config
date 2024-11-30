@@ -24,17 +24,12 @@ function Info(name, value)
 end
 
 function ShowTable(arg, propTable, layer)
-    mp.msg.info(arg)
-    local pos = 0
+    mp.msg.info(('│'):rep(layer) .. '[' .. arg .. ']')
     for index, value in pairs(propTable) do
-        pos = pos + 1
         if type(value) == "table" then
             ShowTable(index, value, layer + 1)
-        end
-        if pos == TableLeng(propTable) then
-            Info((' │'):rep(layer) .. ' └' .. index, value)
         else
-            Info((' │'):rep(layer) .. ' ├' .. index, value)
+            Info(('│'):rep(layer + 1) .. index, value)
         end
     end
 end
