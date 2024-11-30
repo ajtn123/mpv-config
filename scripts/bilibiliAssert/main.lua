@@ -27,7 +27,6 @@ options.read_options(o, _, function() end)
 local danmu_file = nil
 local danmu_open = false
 local sec_sub_visibility = mp.get_property_native("secondary-sub-visibility")
-local sec_sub_ass_override = mp.get_property_native("secondary-sub-ass-override")
 
 local function get_cid()
 	local cid, danmaku_id = nil, nil
@@ -61,34 +60,18 @@ local function file_exists(path)
 	return false
 end
 
--- Log function: log to both terminal and MPV OSD (On-Screen Display)
+-- Log function: log to both terminal
 local function log(string,secs)
-	secs = secs or 2.5
 	mp.msg.info(string)
-	-- mp.osd_message(string,secs)
 end
 
 -- load function
 local function load_danmu(danmu_file)
 	if not file_exists(danmu_file) then return end
-	log('开火')
-	danmu_open = true
-	-- 如果可用将弹幕挂载为次字幕
-	if sec_sub_ass_override then
-		mp.commandv("sub-add", danmu_file, "auto")
-		local sub_count = get_sub_count()
-		mp.set_property_native("secondary-sub-ass-override", "yes")
-		mp.set_property_native("secondary-sid", sub_count)
-		mp.set_property_native("secondary-sub-visibility", true)
-		if mp.get_property_number('fps', 16) < 45 then
-			mp.commandv('vf', 'append', '@danmu:lavfi="fps=fps=60:round=down"')
-		end
-	else
-		-- 挂载subtitles滤镜，注意加上@标签，这样即使多次调用也不会重复挂载，以最后一次为准
-		mp.commandv('vf', 'append', '@danmu:subtitles=filename="'..danmu_file..'"')
-		-- 只能在软解或auto-copy硬解下生效，统一改为auto-copy硬解
-		mp.set_property('hwdec', 'auto-copy')
-	end
+	mp.commandv("sub-add", danmu_file, "auto")
+	local sub_count = get_sub_count()
+	mp.set_property_native("secondary-sid", sub_count)
+	asstoggle()
 end
 
 -- download function
@@ -144,19 +127,7 @@ local function assprocess()
 	'-r',
 	cid,
 	}
-	-- local arg = { ''..directory..'\\Danmu2Ass.exe', '-d', danmaku_dir, 
-	-- '-s', ''..dw..'x'..dh,
-	-- '-fn', o.fontname,
-	-- '-fs',  o.fontsize,
-	-- '-a', o.opacity,
-	-- '-dm', o.duration_marquee,
-	-- '-ds', o.duration_still,
-	-- '-flf', mp.command_native({ "expand-path", o.filter_file }),
-	-- '-p', tostring(math.floor(o.percent*dh)),
-	-- '-r',
-	-- cid,
-	-- }
-	log('弹幕正在上膛')
+	log('加载弹幕')
 	-- run python to get comments
 	mp.command_native_async({
 		name = 'subprocess',
@@ -177,35 +148,36 @@ end
 
 -- toggle function
 function asstoggle(event)
-	if not file_exists(danmu_file) then return end
-	if danmu_open then
-		log('停火')
+	if not danmu_file then return end
+
+	if event then
+		log('文件结束')
+		danmu_file = nil
 		danmu_open = false
-		if sec_sub_ass_override then
-			if event then
-				mp.set_property_native("secondary-sub-visibility", sec_sub_visibility)
-			else
-				mp.set_property_native("secondary-sub-visibility", false)
-			end
-			mp.set_property_native("secondary-sub-ass-override", sec_sub_ass_override)
-			return
-		elseif sec_sub_ass_override == nil then
-			-- if exists @danmaku filter， remove it
-			for _, f in ipairs(mp.get_property_native('vf')) do
-				if f.label == 'danmu' then
-					mp.commandv('vf', 'remove', '@danmu')
-					return
-				end
-			end
-		end
+		mp.set_property_native("secondary-sub-visibility", sec_sub_visibility)
+		mp.commandv('vf', 'remove', '@danmu')
+		return
 	end
-	-- otherwise, load danmu
-	if not event and file_exists(danmu_file) then
-		load_danmu(danmu_file)
+
+	if danmu_open then
+		log('隐藏弹幕')
+		danmu_open = false
+		mp.set_property_native("secondary-sub-visibility", false)
+		mp.commandv('vf', 'remove', '@danmu')
+		return
+	end
+
+	if not danmu_open and mp.get_property_native('secondary-sid') then
+		log('显示弹幕')
+		danmu_open = true
+		mp.set_property_native("secondary-sub-visibility", true)
+		if mp.get_property_number("container-fps", 30) < 45 then
+			mp.commandv('vf', 'append', '@danmu:lavfi="fps=fps=60:round=down"')
+		end
 	end
 end
 
-mp.add_key_binding('b', 'toggle', asstoggle)
+mp.add_key_binding(nil, 'toggle', asstoggle)
 mp.register_event("file-loaded", assprocess)
 mp.register_event("end-file", function()
 	asstoggle(true)
