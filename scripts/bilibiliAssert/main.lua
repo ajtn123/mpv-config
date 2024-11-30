@@ -6,7 +6,7 @@ local options = require 'mp.options'
 local o = {
 	--弹幕字体
 	fontname = "sans-serif",
-	--弹幕字体大小 
+	--弹幕字体大小
 	fontsize = "50",
 	--弹幕不透明度(0-1)
 	opacity = "0.95",
@@ -61,7 +61,7 @@ local function file_exists(path)
 end
 
 -- Log function: log to both terminal
-local function log(string,secs)
+local function log(string, secs)
 	mp.msg.info(string)
 end
 
@@ -78,7 +78,9 @@ end
 local function assprocess()
 	local path = mp.get_property("path")
 	if path and not path:find('^%a[%w.+-]-://') and not (path:find('bilibili.com') or path:find('bilivideo.com'))
-	then return end
+	then
+		return
+	end
 
 	-- get video cid
 	local cid = mp.get_opt('cid')
@@ -100,10 +102,10 @@ local function assprocess()
 	if string.find(directory, "\\")
 	then
 		string.gsub(directory, "/", "\\")
-		py_path = ''..directory..'\\Danmu2Ass.py'
+		py_path = '' .. directory .. '\\Danmu2Ass.py'
 	end
-	local dw = "1920"
-	local dh = "1080"
+	local dw = 1920
+	local dh = 1080
 	local aspect = mp.get_property_number('width', 16) / mp.get_property_number('height', 9)
 	if aspect > dw / dh then
 		dh = math.floor(dw / aspect)
@@ -111,17 +113,17 @@ local function assprocess()
 		dw = math.floor(dh * aspect)
 	end
 	-- choose to use python or .exe
-	local arg = { o.python_path, py_path, '-d', danmaku_dir, 
-	'-s', ''..dw..'x'..dh,
-	'-fn', o.fontname,
-	'-fs',  o.fontsize,
-	'-a', o.opacity,
-	'-dm', o.duration_marquee,
-	'-ds', o.duration_still,
-	'-flf', mp.command_native({ "expand-path", o.filter_file }),
-	'-p', tostring(math.floor(o.percent*dh)),
-	'-r',
-	cid,
+	local arg = { o.python_path, py_path, '-d', danmaku_dir,
+		'-s', '' .. dw .. 'x' .. dh,
+		'-fn', o.fontname,
+		'-fs', o.fontsize,
+		'-a', o.opacity,
+		'-dm', o.duration_marquee,
+		'-ds', o.duration_still,
+		'-flf', mp.command_native({ "expand-path", o.filter_file }),
+		'-p', tostring(math.floor(o.percent * dh)),
+		'-r',
+		cid,
 	}
 	log('加载弹幕')
 	-- run python to get comments
@@ -130,7 +132,7 @@ local function assprocess()
 		playback_only = false,
 		capture_stdout = true,
 		args = arg,
-	},function(res, val, err)
+	}, function(res, val, err)
 		if err == nil
 		then
 			danmu_file = utils.join_path(danmaku_dir, 'bilibili.ass')
@@ -139,7 +141,6 @@ local function assprocess()
 			log(err)
 		end
 	end)
-
 end
 
 -- toggle function
