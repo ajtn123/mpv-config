@@ -1,6 +1,6 @@
 local opts = {
     drag_to_pan_margin = 0,
-    drag_to_pan_move_if_full_view=false,
+    drag_to_pan_move_if_full_view = false,
 
     pan_follows_cursor_margin = 0,
 
@@ -23,7 +23,6 @@ function clamp(value, low, high)
         return value
     end
 end
-
 
 local cleanup = nil -- function set up by drag-to-pan/pan-follows cursor and must be called to clean lingering state
 
@@ -82,7 +81,8 @@ function drag_to_pan_handler(table)
                             (-margin + dim.h / 2) / video_size[2] - 0.5)
                     end
                 end
-                mp.command("no-osd set video-pan-x " .. clamp(pX, -3, 3) .. "; no-osd set video-pan-y " .. clamp(pY, -3, 3))
+                mp.command("no-osd set video-pan-x " ..
+                clamp(pX, -3, 3) .. "; no-osd set video-pan-y " .. clamp(pY, -3, 3))
                 moved = false
             end
         end
@@ -108,17 +108,21 @@ function pan_follows_cursor_handler(table)
         local idle = function()
             if moved then
                 local mX, mY = mp.get_mouse_pos()
-                local x = math.min(1, math.max(- 2 * mX / dim.w + 1, -1))
-                local y = math.min(1, math.max(- 2 * mY / dim.h + 1, -1))
+                local x = math.min(1, math.max(-2 * mX / dim.w + 1, -1))
+                local y = math.min(1, math.max(-2 * mY / dim.h + 1, -1))
                 local command = ""
                 local margin = opts.pan_follows_cursor_margin
                 if dim.ml + dim.mr < 0 then
-                    command = command .. "no-osd set video-pan-x " .. clamp(x * (2 * margin - dim.ml - dim.mr) / (2 * video_size[1]), -3, 3) .. ";"
+                    command = command ..
+                    "no-osd set video-pan-x " ..
+                    clamp(x * (2 * margin - dim.ml - dim.mr) / (2 * video_size[1]), -3, 3) .. ";"
                 elseif mp.get_property_number("video-pan-x") ~= 0 then
                     command = command .. "no-osd set video-pan-x " .. "0;"
                 end
                 if dim.mt + dim.mb < 0 then
-                    command = command .. "no-osd set video-pan-y " .. clamp(y * (2 * margin - dim.mt - dim.mb) / (2 * video_size[2]), -3, 3) .. ";"
+                    command = command ..
+                    "no-osd set video-pan-y " ..
+                    clamp(y * (2 * margin - dim.mt - dim.mb) / (2 * video_size[2]), -3, 3) .. ";"
                 elseif mp.get_property_number("video-pan-y") ~= 0 then
                     command = command .. "no-osd set video-pan-y " .. "0;"
                 end
@@ -143,9 +147,9 @@ function cursor_centric_zoom_handler(amt)
     local dim = mp.get_property_native("osd-dimensions")
     if not dim then return end
 
-    local margin = opts.cursor_centric_zoom_margin
+    local margin      = opts.cursor_centric_zoom_margin
 
-    local video_size = { dim.w - dim.ml - dim.mr, dim.h - dim.mt - dim.mb }
+    local video_size  = { dim.w - dim.ml - dim.mr, dim.h - dim.mt - dim.mb }
 
     -- the size in pixels of the (in|de)crement
     local diff_width  = (2 ^ zoom_inc - 1) * video_size[1]
@@ -159,10 +163,10 @@ function cursor_centric_zoom_handler(amt)
         -- in addition, this should take care of trying too zoom out while everything is already visible
         local new_zoom_inc_x = math.log((dim.w - 2 * margin) / video_size[1]) / math.log(2)
         local new_zoom_inc_y = math.log((dim.h - 2 * margin) / video_size[2]) / math.log(2)
-        local new_zoom_inc = math.min(0, math.min(new_zoom_inc_x, new_zoom_inc_y))
-        zoom_inc = new_zoom_inc
-        diff_width  = (2 ^ zoom_inc - 1) * video_size[1]
-        diff_height = (2 ^ zoom_inc - 1) * video_size[2]
+        local new_zoom_inc   = math.min(0, math.min(new_zoom_inc_x, new_zoom_inc_y))
+        zoom_inc             = new_zoom_inc
+        diff_width           = (2 ^ zoom_inc - 1) * video_size[1]
+        diff_height          = (2 ^ zoom_inc - 1) * video_size[2]
     end
     local new_width = video_size[1] + diff_width
     local new_height = video_size[2] + diff_height
@@ -182,7 +186,8 @@ function cursor_centric_zoom_handler(amt)
         local rx = (dim.ml + video_size[1] / 2 - mouse_pos_origin[1]) / (video_size[1] / 2)
         new_pan_x = (pan_x * video_size[1] + rx * diff_width / 2) / new_width
         if auto_c then
-            new_pan_x = clamp(new_pan_x, (dim.w - 2 * margin) / (2 * new_width) - 0.5, - (dim.w - 2 * margin) / (2 * new_width) + 0.5)
+            new_pan_x = clamp(new_pan_x, (dim.w - 2 * margin) / (2 * new_width) - 0.5,
+                -(dim.w - 2 * margin) / (2 * new_width) + 0.5)
         end
     end
 
@@ -193,12 +198,15 @@ function cursor_centric_zoom_handler(amt)
         local ry = (dim.mt + video_size[2] / 2 - mouse_pos_origin[2]) / (video_size[2] / 2)
         new_pan_y = (pan_y * video_size[2] + ry * diff_height / 2) / new_height
         if auto_c then
-            new_pan_y = clamp(new_pan_y, (dim.h - 2 * margin) / (2 * new_height) - 0.5, - (dim.h - 2 * margin) / (2 * new_height) + 0.5)
+            new_pan_y = clamp(new_pan_y, (dim.h - 2 * margin) / (2 * new_height) - 0.5,
+                -(dim.h - 2 * margin) / (2 * new_height) + 0.5)
         end
     end
 
     local zoom_origin = mp.get_property("video-zoom")
-    mp.command("no-osd set video-zoom " .. zoom_origin + zoom_inc .. "; no-osd set video-pan-x " .. clamp(new_pan_x, -3, 3) .. "; no-osd set video-pan-y " .. clamp(new_pan_y, -3, 3))
+    mp.command("no-osd set video-zoom " ..
+    zoom_origin + zoom_inc ..
+    "; no-osd set video-pan-x " .. clamp(new_pan_x, -3, 3) .. "; no-osd set video-pan-y " .. clamp(new_pan_y, -3, 3))
 end
 
 function align_border(x, y)
@@ -208,10 +216,12 @@ function align_border(x, y)
     local x, y = tonumber(x), tonumber(y)
     local command = ""
     if x then
-        command = command .. "no-osd set video-pan-x " .. clamp(- x * (dim.ml + dim.mr) / (2 * video_size[1]), -3, 3) .. ";"
+        command = command ..
+        "no-osd set video-pan-x " .. clamp(-x * (dim.ml + dim.mr) / (2 * video_size[1]), -3, 3) .. ";"
     end
     if y then
-        command = command .. "no-osd set video-pan-y " .. clamp(- y * (dim.mt + dim.mb) / (2 * video_size[2]), -3, 3) .. ";"
+        command = command ..
+        "no-osd set video-pan-y " .. clamp(-y * (dim.mt + dim.mb) / (2 * video_size[2]), -3, 3) .. ";"
     end
     if command ~= "" then
         mp.command(command)
@@ -267,11 +277,11 @@ function reset_pan_if_visible()
     end
 end
 
-mp.add_key_binding(nil, "drag-to-pan", drag_to_pan_handler, {complex = true})
-mp.add_key_binding(nil, "pan-follows-cursor", pan_follows_cursor_handler, {complex = true})
+mp.add_key_binding(nil, "drag-to-pan", drag_to_pan_handler, { complex = true })
+mp.add_key_binding(nil, "pan-follows-cursor", pan_follows_cursor_handler, { complex = true })
 mp.add_key_binding(nil, "cursor-centric-zoom", cursor_centric_zoom_handler)
 mp.add_key_binding(nil, "align-border", align_border)
 mp.add_key_binding(nil, "pan-image", pan_image)
 mp.add_key_binding(nil, "rotate-video", rotate_video)
 mp.add_key_binding(nil, "reset-pan-if-visible", reset_pan_if_visible)
-mp.add_key_binding(nil, "force-print-filename", force_print_filename)
+-- mp.add_key_binding(nil, "force-print-filename", force_print_filename)
