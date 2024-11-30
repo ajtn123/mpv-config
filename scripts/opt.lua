@@ -1,16 +1,35 @@
 local mp = require 'mp'
+
 function Info(name, value)
+    if type(value) == "boolean" then
+        if value then
+            value = "true"
+        elseif not value then
+            value = "false"
+        else
+            value = nil
+        end
+    elseif type(value) == "nil" then
+        value = "null"
+    end
     mp.msg.info(name .. ': ' .. value)
 end
 
 function ShowMsg(arg, property_value)
     if type(property_value) == "table" then
-        Info(arg, '')
+        mp.msg.info(arg)
+        local pos = 0
         for index, value in pairs(property_value) do
-            Info(index, value)
+            pos = pos + 1
+            if pos == property_value.leng then
+                Info(' └' .. index, value)
+            else
+                Info(' ├' .. index, value)
+            end
         end
         return
     end
+
     Info(arg, property_value)
 end
 
