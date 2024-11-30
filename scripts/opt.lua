@@ -47,12 +47,22 @@ function ShowMsg(arg, property_value)
     Info(arg, property_value)
 end
 
-function ShowOpts(...)
+function GetOpts(...)
     local args = { ... }
     for _, arg in ipairs(args) do
         local property_value = mp.get_property_native(arg)
-        ShowMsg(arg, property_value)
+        local option_values = mp.get_opt(arg)
+        if property_value == nil and option_values == nil then
+            ShowMsg(arg, nil)
+        elseif property_value == nil then
+            ShowMsg(arg, option_values)
+        elseif option_values == nil then
+            ShowMsg(arg, property_value)
+        else
+            ShowMsg('P.' .. arg, property_value)
+            ShowMsg('O.' .. arg, option_values)
+        end
     end
 end
 
-mp.register_script_message('opt', function(...) ShowOpts(...) end)
+mp.register_script_message('opt', function(...) GetOpts(...) end)
