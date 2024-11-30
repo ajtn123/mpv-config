@@ -14,8 +14,6 @@ function Info(name, value)
             value = "true"
         elseif not value then
             value = "false"
-        else
-            value = nil
         end
     elseif type(value) == "nil" then
         value = "null"
