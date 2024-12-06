@@ -1,4 +1,0 @@
-{
-  "Lua.diagnostics.globals": ["mp"],
-  "Lua.diagnostics.disable": ["lowercase-global"]
-}
