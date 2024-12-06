@@ -68,10 +68,16 @@ end
 -- load function
 local function load_danmu(danmu_file)
 	if not file_exists(danmu_file) then return end
+	mp.set_property_native("secondary-sub-visibility", false)
 	mp.commandv("sub-add", danmu_file, "auto")
 	local sub_count = get_sub_count()
 	mp.set_property_native("secondary-sid", sub_count)
-	asstoggle()
+	log(danmu_file ..
+		' [' .. utils.file_info(danmu_file)["size"] ..
+		'][' .. math.floor((utils.file_info(danmu_file)["size"] - 850) / 120) .. ']')
+	if utils.file_info(danmu_file)["size"] > 850 then
+		asstoggle()
+	end
 end
 
 -- download function
@@ -81,6 +87,8 @@ local function assprocess()
 	then
 		return
 	end
+
+	mp.set_property_native("sid", false)
 
 	-- get video cid
 	local cid = mp.get_opt('cid')
@@ -113,7 +121,9 @@ local function assprocess()
 		dw = math.floor(dh * aspect)
 	end
 	-- choose to use python or .exe
-	local arg = { o.python_path, py_path, '-d', danmaku_dir,
+	local arg = {
+		o.python_path, py_path,
+		'-d', danmaku_dir,
 		'-s', '' .. dw .. 'x' .. dh,
 		'-fn', o.fontname,
 		'-fs', o.fontsize,
@@ -122,10 +132,8 @@ local function assprocess()
 		'-ds', o.duration_still,
 		'-flf', mp.command_native({ "expand-path", o.filter_file }),
 		'-p', tostring(math.floor(o.percent * dh)),
-		'-r',
-		cid,
+		'-r', cid,
 	}
-	log('加载弹幕')
 	-- run python to get comments
 	mp.command_native_async({
 		name = 'subprocess',
