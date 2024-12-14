@@ -163,7 +163,7 @@ function asstoggle(event)
 		danmu_file = nil
 		danmu_open = false
 		mp.set_property_native("secondary-sub-visibility", sec_sub_visibility)
-		mp.commandv('vf', 'remove', '@danmu')
+		mp.commandv('vf', 'remove', '@60FPS')
 		return
 	end
 
@@ -171,7 +171,7 @@ function asstoggle(event)
 		log('隐藏弹幕')
 		danmu_open = false
 		mp.set_property_native("secondary-sub-visibility", false)
-		mp.commandv('vf', 'remove', '@danmu')
+		mp.commandv('vf', 'remove', '@60FPS')
 		return
 	end
 
@@ -180,7 +180,7 @@ function asstoggle(event)
 		danmu_open = true
 		mp.set_property_native("secondary-sub-visibility", true)
 		if mp.get_property_number("container-fps", 30) < 45 then
-			mp.commandv('vf', 'append', '@danmu:lavfi="fps=fps=60:round=down"')
+			mp.commandv('vf', 'append', '@60FPS:lavfi="fps=fps=60:round=down"')
 		end
 	end
 end
