@@ -1,4 +1,9 @@
 local mp = require 'mp'
+local options = {
+    string_output = false,
+    include_script = true
+}
+require "mp.options".read_options(options, "opt")
 
 function TableLeng(t)
     local leng = 0
@@ -43,17 +48,27 @@ end
 function GetOpts(...)
     local args = { ... }
     for _, arg in ipairs(args) do
-        local property_value = mp.get_property_native(arg)
-        local option_values = mp.get_opt(arg)
-        if property_value == nil and option_values == nil then
-            ShowMsg(arg, nil)
-        elseif property_value == nil then
-            ShowMsg(arg, option_values)
-        elseif option_values == nil then
-            ShowMsg(arg, property_value)
+        local property_value = nil
+        local option_values = nil
+        if options.string_output then
+            property_value = mp.get_property(arg)
         else
-            ShowMsg('P.' .. arg, property_value)
-            ShowMsg('O.' .. arg, option_values)
+            property_value = mp.get_property_native(arg)
+        end
+        if options.include_script then
+            option_values = mp.get_opt(arg)
+        end
+        local msgs = 0
+        if property_value ~= nil then
+            ShowMsg(arg, property_value)
+            msgs = msgs + 1
+        end
+        if option_values ~= nil then
+            ShowMsg("Script." .. arg, option_values)
+            msgs = msgs + 1
+        end
+        if msgs == 0 then
+            ShowMsg(arg, nil)
         end
     end
 end
