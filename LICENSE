@@ -21,6 +21,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 [scripts\uosc]
+[fonts\uosc_icons.otf]
+[fonts\uosc_textures.ttf]
 https://github.com/tomasklaen/uosc
                   GNU LESSER GENERAL PUBLIC LICENSE
                        Version 2.1, February 1999
@@ -2307,3 +2309,13 @@ may consider it more useful to permit linking proprietary applications with
 the library.  If this is what you want to do, use the GNU Lesser General
 Public License instead of this License.  But first, please read
 <http://www.gnu.org/philosophy/why-not-lgpl.html>.
+
+[shaders\]
+In-file source and license.
+
+[input_uosc.conf]
+[mpv.conf]
+[profiles.conf]
+[script-opts.conf]
+https://github.com/hooke007/MPV_lazy
+Inspired by MPV-lazy.
