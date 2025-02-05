@@ -1271,16 +1271,6 @@ end
 Manager:disable('user', options.disable_elements)
 
 -------------------------------------------------
-mp.add_key_binding(nil, "delete_file", function()
-	print("deletion: " .. state.path)
-	if not navigate_item(1) then
-		if not navigate_item(-1) then
-			mp.command('quit')
-		end
-	end
-	os.remove(state.path)
-end)
-
 mp.register_script_message('reload', function()
 	mp.command('quit')
 	mp.command_native_async({ 'run', 'mpv', state.path })
