@@ -2291,7 +2291,8 @@ Public License instead of this License.  But first, please read
 [shaders\]
 In-file source and license.
 
-[input_uosc.conf]
+[input-zh.conf]
+[input-en.conf]
 [mpv.conf]
 [profiles.conf]
 [script-opts.conf]
