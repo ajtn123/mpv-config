@@ -6,6 +6,8 @@ local options = require 'mp.options'
 local o = {
 	--自动播放弹幕
 	autoplay = true,
+	--最小弹幕数量
+	mincount = 1,
 	--弹幕字体
 	fontname = "sans-serif",
 	--弹幕字体大小
@@ -68,16 +70,17 @@ local function log(string, secs)
 end
 
 -- load function
-local function load_danmu(danmu_file)
-	if not file_exists(danmu_file) then return end
+local function load_danmu(file)
+	if not file_exists(file) then return end
 	mp.set_property_native("secondary-sub-visibility", false)
-	mp.commandv("sub-add", danmu_file, "auto")
+	mp.commandv("sub-add", file, "auto")
 	local sub_count = get_sub_count()
 	mp.set_property_native("secondary-sid", sub_count)
-	log(danmu_file ..
-		' [' .. utils.file_info(danmu_file)["size"] ..
-		'][' .. math.floor((utils.file_info(danmu_file)["size"] - 850) / 120) .. ']')
-	if o.autoplay and utils.file_info(danmu_file)["size"] > 850 then
+	local approximatedDanmukuCount = math.floor((utils.file_info(file)["size"] - 850) / 120)
+	log(file ..
+		' [' .. utils.file_info(file)["size"] ..
+		'][' .. approximatedDanmukuCount .. ']')
+	if o.autoplay and approximatedDanmukuCount >= o.mincount then
 		asstoggle()
 	end
 end
