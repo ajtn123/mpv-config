@@ -4,6 +4,8 @@ local utils = require 'mp.utils'
 local options = require 'mp.options'
 
 local o = {
+	--自动播放弹幕
+	autoplay = true,
 	--弹幕字体
 	fontname = "sans-serif",
 	--弹幕字体大小
@@ -75,7 +77,7 @@ local function load_danmu(danmu_file)
 	log(danmu_file ..
 		' [' .. utils.file_info(danmu_file)["size"] ..
 		'][' .. math.floor((utils.file_info(danmu_file)["size"] - 850) / 120) .. ']')
-	if utils.file_info(danmu_file)["size"] > 850 then
+	if o.autoplay and utils.file_info(danmu_file)["size"] > 850 then
 		asstoggle()
 	end
 end
