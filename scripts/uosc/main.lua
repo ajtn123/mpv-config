@@ -1287,6 +1287,6 @@ mp.register_script_message('reload', function()
 end)
 
 mp.register_script_message('gimp', function()
-	mp.command_native_async({ 'run', 'c:\\Program Files\\GIMP 2\\bin\\gimp-2.10.exe', state.path })
+	mp.command_native_async({ 'run', 'c:\\Program Files\\GIMP 3\\bin\\gimp-3.exe', state.path })
 end)
 -------------------------------------------------
