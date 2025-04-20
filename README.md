@@ -13,16 +13,16 @@
 
 ## Internationalization
 1. The default language of uosc menu is *Simplified Chinese*, you can change it to *English*. Feel free to modify anything after `#!` each line to your language.
-2. The default load order for subtitle is *Simplified Chinese* > *Other Chinese* > *English* > *Japanese*, and for audio is *Japanese* > *Simplified Chinese* > *Other Chinese* > *English*. This list can be changed according to [MPV Manual](https://mpv.io/manual/master/#options).
+2. The default load order for subtitle is *Simplified Chinese* > *Other Chinese* > *English* > *Japanese*, and for audio is *Japanese* > *Simplified Chinese* > *Other Chinese* > *English*. These orders are specified using IETF language tags. Please refer to [Common IETF language tags](https://gist.github.com/traysr/2001377) and [MPV Manual](https://mpv.io/manual/master/#options).
 ```
 [mpv.conf]
   line 5 (uosc menu):
     input-conf = "~~/input-zh.conf"
     input-conf = "~~/input-en.conf"
   line 52 (audio):
-    alang = ja,zh-Hans,en
+    alang = ja,zh-CN,en
   line 71 (subtitle):
-    slang = zh-Hans,en,ja
+    slang = zh-CN,en,ja
 ```
 
 ## [Credit](https://github.com/ajtn123/mpv-config/blob/main/Credits.txt)
