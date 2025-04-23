@@ -2288,6 +2288,10 @@ the library.  If this is what you want to do, use the GNU Lesser General
 Public License instead of this License.  But first, please read
 <http://www.gnu.org/philosophy/why-not-lgpl.html>.
 
+[scripts\sub-fonts-dir-auto.lua]
+https://github.com/fbriere/mpv-scripts/blob/master/doc/sub-fonts-dir-auto.md
+https://github.com/fbriere/mpv-scripts/blob/master/LICENSE
+
 [shaders\]
 In-file source and license.
 
