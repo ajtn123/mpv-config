@@ -20,8 +20,8 @@
 ```
 [mpv.conf]
   line 5 (uosc menu language):
-    input-conf = "~~/input-zh.conf"
-    input-conf = "~~/input-en.conf"
+    input-conf = "~~/input-sc.conf" (Simplified Chinese)
+    input-conf = "~~/input-en.conf" (English)
   line 42 (osd font):
     osd-font = "GenSenRounded2 JP R"
   line 52 (audio language):
@@ -42,4 +42,23 @@
     script-opts-append = bilibiliAssert-fontname=GenSenRounded2 JP L
 ```
 
-## [Credit](https://github.com/ajtn123/mpv-config/blob/main/Credits.txt)
+## Credit
+[scripts\bilibiliAssert](https://github.com/itKelis/MPV-Play-BiliBili-Comments)
+
+[scripts\uosc](https://github.com/tomasklaen/uosc)
+
+[scripts\cycle-profile.lua](https://github.com/CogentRedTester/mpv-scripts/blob/master/cycle-profile.lua)
+
+[scripts\detect-image.lua](https://github.com/occivink/mpv-image-viewer/blob/master/scripts/detect-image.lua)
+
+[scripts\image-positioning.lua](https://github.com/occivink/mpv-image-viewer/blob/master/scripts/image-positioning.lua)
+
+[scripts\sub-fonts-dir-auto.lua](https://github.com/fbriere/mpv-scripts/blob/master/doc/sub-fonts-dir-auto.md)
+
+[scripts\thumbfast.lua](https://github.com/po5/thumbfast)
+
+[shaders\Anime4K_*.glsl](https://github.com/bloc97/Anime4K)
+
+[shaders\KrigBilateral.glsl](https://github.com/awused/dotfiles/blob/master/mpv/.config/mpv/shaders/KrigBilateral.glsl)
+
+Inspired by [MPV-lazy](https://github.com/hooke007/MPV_lazy).
