@@ -42,6 +42,11 @@
     script-opts-append = bilibiliAssert-fontname=GenSenRounded2 JP L
 ```
 
+## Uninstallation
+Simply deleting the folder that was moved and renamed in [step 2](#installation) will remove this configuration of MPV entirely.
+
+If you also want to uninstall MPV itself, follow the instruction from where you have downloaded it.
+
 ## Credit
 [scripts\bilibiliAssert](https://github.com/itKelis/MPV-Play-BiliBili-Comments)
 
