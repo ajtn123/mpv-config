@@ -56,7 +56,7 @@ If you also want to uninstall MPV itself, follow the instruction from where you 
 
 [scripts\detect-image.lua](https://github.com/occivink/mpv-image-viewer/blob/master/scripts/detect-image.lua)
 
-[scripts\image-positioning.lua](https://github.com/occivink/mpv-image-viewer/blob/master/scripts/image-positioning.lua)
+[~~scripts\image-positioning.lua~~](https://github.com/occivink/mpv-image-viewer/blob/master/scripts/image-positioning.lua)
 
 [scripts\sub-fonts-dir-auto.lua](https://github.com/fbriere/mpv-scripts/blob/master/doc/sub-fonts-dir-auto.md)
 
@@ -67,3 +67,5 @@ If you also want to uninstall MPV itself, follow the instruction from where you 
 [shaders\KrigBilateral.glsl](https://github.com/awused/dotfiles/blob/master/mpv/.config/mpv/shaders/KrigBilateral.glsl)
 
 Inspired by [MPV-lazy](https://github.com/hooke007/MPV_lazy).
+
+[MPV Official Website](https://mpv.io/) | [MPV Manual](https://mpv.io/manual/master) | [MPV Source Code](https://github.com/mpv-player/mpv)
