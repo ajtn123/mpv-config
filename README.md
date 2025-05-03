@@ -1,15 +1,40 @@
 # A Minimalist MPV Configuration
 
 ## Installation
-0. Download and install MPV from [mpv.io/installation](https://mpv.io/installation/). For windows, [builds by shinchiro](https://github.com/shinchiro/mpv-winbuild-cmake/releases) is recommended.
+Prerequisites: MPV installed - Find mpv builds at [mpv.io/installation](https://mpv.io/installation/). For windows, [builds by shinchiro](https://github.com/shinchiro/mpv-winbuild-cmake/releases) is recommended.
+
 1. Download and unzip [this repo](https://github.com/ajtn123/mpv-config/archive/refs/heads/main.zip).
-2. Move and rename the `mpv-config` folder to one of the default config file locations:
+2. Move and rename the `mpv-config` folder to one of the default config directories:
    - [Windows](https://mpv.io/manual/master/#files-on-windows):
      - `C:\users\<USERNAME>\AppData\Roaming\mpv\`
      - `<EXE directory>\portable_config\`
    - [Linux](https://mpv.io/manual/master/#files)
    - [MacOS](https://mpv.io/manual/master/#files-on-macos)
-3. Enjoy. See [MPV Manual](https://mpv.io/manual/master) for more customizable options.
+3. Enjoy.
+ 
+Read [MPV Manual](https://mpv.io/manual/master) for more customizable options.
+
+## Customization
+### YT-DLP
+If you are watching video on Youtube or other YT-DLP supported website with MPV, you should consider setting the following options. `~` represnts the current user's home directory.
+
+1. MPV looks for YT-DLP in PATH and in [config directory](#installation). Set the path if you have it installed elsewhere.
+2. Set cookies if you are watching Youtube or other websites that might require them. Comment the line which you are NOT using.
+   - Chrome/Edge: extract cookies manually with [Get cookies.txt LOCALLY](https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc).
+   - Firefox: use `cookies-from-browser=firefox`, which will automatically extract cookies from browser whenever needed.
+3. Comment the line to connect directly without proxying.
+
+Visit [YT-DLP website](https://github.com/yt-dlp/yt-dlp) for more information.
+```
+[script-opts.conf]
+  line 23  (YT-DLP path):
+    # script-opts-append = ytdl_hook-ytdl_path=~/tools/mpv/yt-dlp.exe
+  line 22-23 (YT-DLP cookies):
+    # ytdl-raw-options-append = cookies-from-browser=firefox
+    ytdl-raw-options-append = cookies=~\Documents\ytdlcookies.txt
+  line 24 (YT-DLP proxy):
+    ytdl-raw-options-append = proxy=http://127.0.0.1:7897/
+```
 
 ## Internationalization
 1. The default language of uosc menu is *Simplified Chinese*, you can change it to *English*. Feel free to modify anything after `#!` each line to your language.
