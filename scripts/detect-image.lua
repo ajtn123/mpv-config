@@ -32,6 +32,24 @@ function set_image(is_image)
     was_image = is_image
 end
 
+mp.add_key_binding(nil, 'image-next', function()
+	if was_image then
+		mp.command('script-binding uosc/next');
+	end
+end)
+
+mp.add_key_binding(nil, 'image-prev', function()
+	if was_image then
+		mp.command('script-binding uosc/prev');
+	end
+end)
+
+mp.add_key_binding(nil, 'image-zoom', function(factor)
+	if was_image then
+		mp.command('script-binding positioning/cursor-centric-zoom ' .. factor);
+	end
+end)
+
 local properties = {}
 
 function properties_changed()
