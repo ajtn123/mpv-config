@@ -1,5 +1,6 @@
 -- https://github.com/itKelis/MPV-Play-BiliBili-Comments
 
+local mp = require 'mp'
 local utils = require 'mp.utils'
 local options = require 'mp.options'
 
@@ -81,12 +82,12 @@ local function load_danmu(file)
 		' [' .. utils.file_info(file)["size"] ..
 		'][' .. approximatedDanmukuCount .. ']')
 	if o.autoplay and approximatedDanmukuCount >= o.mincount then
-		danmaku_show()
+		Danmaku_show()
 	end
 end
 
 -- download function
-local function assprocess()
+local function Danmaku_check()
 	local path = mp.get_property("path")
 	if path and not path:find('^%a[%w.+-]-://') and not (path:find('bilibili.com') or path:find('bilivideo.com'))
 	then
@@ -105,6 +106,10 @@ local function assprocess()
 	end
 	if cid == nil then return end
 
+	Danmu2Ass_process(cid)
+end
+
+function Danmu2Ass_process(cid)
 	-- get danmaku directory
 	local danmaku_dir = os.getenv("TEMP") or "/tmp/"
 	-- get script directory
@@ -139,6 +144,7 @@ local function assprocess()
 		'-p', tostring(math.floor(o.percent * dh)),
 		'-r', cid,
 	}
+
 	-- run python to get comments
 	mp.command_native_async({
 		name = 'subprocess',
@@ -156,21 +162,20 @@ local function assprocess()
 	end)
 end
 
--- toggle function
-function asstoggle()
+function Danmaku_toggle()
 	if not danmu_file then return end
 
 	if danmu_open then
-		danmaku_unshow()
+		Danmaku_unshow()
 		return
 	end
 
 	if not danmu_open and mp.get_property_native('secondary-sid') then
-		danmaku_show()
+		Danmaku_show()
 	end
 end
 
-function danmaku_terminate()
+function Danmaku_terminate()
 	if not danmu_file then return end
 	log('文件结束')
 	if file_exists(danmu_file) then
@@ -182,14 +187,14 @@ function danmaku_terminate()
 	mp.commandv('vf', 'remove', '@60FPS')
 end
 
-function danmaku_unshow()
+function Danmaku_unshow()
 	log('隐藏弹幕')
 	danmu_open = false
 	mp.set_property_native("secondary-sub-visibility", false)
 	mp.commandv('vf', 'remove', '@60FPS')
 end
 
-function danmaku_show()
+function Danmaku_show()
 	log('显示弹幕')
 	danmu_open = true
 	mp.set_property_native("secondary-sub-visibility", true)
@@ -198,6 +203,6 @@ function danmaku_show()
 	end
 end
 
-mp.add_key_binding(nil, 'tdanmu', asstoggle)
-mp.register_event("file-loaded", assprocess)
-mp.register_event("end-file", danmaku_terminate)
+mp.add_key_binding(nil, 'tdanmu', Danmaku_toggle)
+mp.register_event("file-loaded", Danmaku_check)
+mp.register_event("end-file", Danmaku_terminate)
