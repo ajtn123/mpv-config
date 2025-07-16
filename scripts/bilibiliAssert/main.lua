@@ -81,7 +81,7 @@ local function load_danmu(file)
 		' [' .. utils.file_info(file)["size"] ..
 		'][' .. approximatedDanmukuCount .. ']')
 	if o.autoplay and approximatedDanmukuCount >= o.mincount then
-		asstoggle()
+		danmaku_show()
 	end
 end
 
@@ -157,39 +157,47 @@ local function assprocess()
 end
 
 -- toggle function
-function asstoggle(event)
+function asstoggle()
 	if not danmu_file then return end
 
-	if event then
-		log('文件结束')
-		if file_exists(danmu_file) then
-			os.remove(danmu_file)
-		end
-		danmu_file = nil
-		danmu_open = false
-		mp.set_property_native("secondary-sub-visibility", sec_sub_visibility)
-		mp.commandv('vf', 'remove', '@60FPS')
-		return
-	end
-
 	if danmu_open then
-		log('隐藏弹幕')
-		danmu_open = false
-		mp.set_property_native("secondary-sub-visibility", false)
-		mp.commandv('vf', 'remove', '@60FPS')
+		danmaku_unshow()
 		return
 	end
 
 	if not danmu_open and mp.get_property_native('secondary-sid') then
-		log('显示弹幕')
-		danmu_open = true
-		mp.set_property_native("secondary-sub-visibility", true)
-		if mp.get_property_number("container-fps", 30) < 45 then
-			mp.commandv('vf', 'append', '@60FPS:lavfi="fps=fps=60:round=down"')
-		end
+		danmaku_show()
 	end
 end
 
-mp.add_key_binding(nil, 'toggle', asstoggle)
+function danmaku_terminate()
+	if not danmu_file then return end
+	log('文件结束')
+	if file_exists(danmu_file) then
+		os.remove(danmu_file)
+	end
+	danmu_file = nil
+	danmu_open = false
+	mp.set_property_native("secondary-sub-visibility", sec_sub_visibility)
+	mp.commandv('vf', 'remove', '@60FPS')
+end
+
+function danmaku_unshow()
+	log('隐藏弹幕')
+	danmu_open = false
+	mp.set_property_native("secondary-sub-visibility", false)
+	mp.commandv('vf', 'remove', '@60FPS')
+end
+
+function danmaku_show()
+	log('显示弹幕')
+	danmu_open = true
+	mp.set_property_native("secondary-sub-visibility", true)
+	if mp.get_property_number("container-fps", 30) < 45 then
+		mp.commandv('vf', 'append', '@60FPS:lavfi="fps=fps=60:round=down"')
+	end
+end
+
+mp.add_key_binding(nil, 'tdanmu', asstoggle)
 mp.register_event("file-loaded", assprocess)
-mp.register_event("end-file", function() asstoggle(true) end)
+mp.register_event("end-file", danmaku_terminate)
