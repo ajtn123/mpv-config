@@ -106,10 +106,10 @@ local function Danmaku_check()
 	end
 	if cid == nil then return end
 
-	Danmu2Ass_process(cid)
+	Danmaku_process(cid)
 end
 
-function Danmu2Ass_process(cid)
+function Danmaku_process(cid)
 	-- get danmaku directory
 	local danmaku_dir = os.getenv("TEMP") or "/tmp/"
 	-- get script directory
@@ -206,3 +206,4 @@ end
 mp.add_key_binding(nil, 'tdanmu', Danmaku_toggle)
 mp.register_event("file-loaded", Danmaku_check)
 mp.register_event("end-file", Danmaku_terminate)
+mp.register_script_message('load-cid', Danmaku_process)
