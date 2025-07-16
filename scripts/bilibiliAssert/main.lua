@@ -104,12 +104,13 @@ local function Danmaku_check()
 			mp.commandv('sub-remove', danmaku_id)
 		end
 	end
-	if cid == nil then return end
 
 	Danmaku_process(cid)
 end
 
 function Danmaku_process(cid)
+	if cid == nil then return end
+
 	-- get danmaku directory
 	local danmaku_dir = os.getenv("TEMP") or "/tmp/"
 	-- get script directory
@@ -206,4 +207,4 @@ end
 mp.add_key_binding(nil, 'tdanmu', Danmaku_toggle)
 mp.register_event("file-loaded", Danmaku_check)
 mp.register_event("end-file", Danmaku_terminate)
-mp.register_script_message('load-cid', Danmaku_process)
+mp.register_script_message('load-danmaku', Danmaku_process)
