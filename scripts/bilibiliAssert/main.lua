@@ -88,22 +88,23 @@ end
 
 -- download function
 local function Danmaku_check()
-	local path = mp.get_property("path")
-	if path and not path:find('^%a[%w.+-]-://') and not (path:find('bilibili.com') or path:find('bilivideo.com'))
-	then
-		return
-	end
-
-	mp.set_property_native("sid", false)
-
-	-- get video cid
 	local cid = mp.get_opt('cid')
-	if cid == nil and path and path:find('^%a[%w.+-]-://') then
+
+	if cid == nil then
+		local path = mp.get_property("path")
+		if path and not path:find('^%a[%w.+-]-://') and not (path:find('bilibili.com') or path:find('bilivideo.com')) then
+			return
+		end
+
+		local danmaku_id = nil
 		cid, danmaku_id = get_cid()
+
 		if danmaku_id ~= nil then
 			mp.commandv('sub-remove', danmaku_id)
 		end
 	end
+
+	mp.set_property_native("sid", false)
 
 	Danmaku_process(cid)
 end
@@ -158,7 +159,7 @@ function Danmaku_process(cid)
 			danmu_file = utils.join_path(danmaku_dir, 'bilibili.ass')
 			load_danmu(danmu_file)
 		else
-			log(err)
+			log("处理错误: " .. err)
 		end
 	end)
 end
