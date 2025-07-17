@@ -28,7 +28,7 @@ local o = {
 	python_path = "python",
 }
 
-options.read_options(o, _, function() end)
+options.read_options(o)
 
 local danmu_file = nil
 local danmu_open = false
