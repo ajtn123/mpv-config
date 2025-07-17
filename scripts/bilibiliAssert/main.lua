@@ -1,11 +1,12 @@
--- https://github.com/itKelis/MPV-Play-BiliBili-Comments
+-- https://github.com/ajtn123/MPV-Play-BiliBili-Comments
+-- Original: https://github.com/itKelis/MPV-Play-BiliBili-Comments
 
 local mp = require 'mp'
 local utils = require 'mp.utils'
 local options = require 'mp.options'
 
 local o = {
-	--自动播放弹幕
+	--自动显示弹幕
 	autoplay = true,
 	--最小弹幕数量
 	mincount = 1,
@@ -32,6 +33,7 @@ options.read_options(o, _, function() end)
 local danmu_file = nil
 local danmu_open = false
 local sec_sub_visibility = mp.get_property_native("secondary-sub-visibility")
+local sec_sub_ass_override = mp.get_property_native("secondary-sub-ass-override")
 
 local function get_cid()
 	local cid, danmaku_id = nil, nil
@@ -74,6 +76,7 @@ end
 local function load_danmu(file)
 	if not file_exists(file) then return end
 	mp.set_property_native("secondary-sub-visibility", false)
+	mp.set_property_native("secondary-sub-ass-override", false)
 	mp.commandv("sub-add", file, "auto")
 	local sub_count = get_sub_count()
 	mp.set_property_native("secondary-sid", sub_count)
@@ -186,6 +189,7 @@ function Danmaku_terminate()
 	danmu_file = nil
 	danmu_open = false
 	mp.set_property_native("secondary-sub-visibility", sec_sub_visibility)
+	mp.set_property_native("secondary-sub-ass-override", sec_sub_ass_override)
 	mp.commandv('vf', 'remove', '@60FPS')
 end
 
