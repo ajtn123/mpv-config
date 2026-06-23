@@ -14,7 +14,7 @@ from pickle import TRUE
 import random
 from re import sub, compile
 import sys
-import xml.etree.cElementTree as ET 
+import xml.etree.cElementTree as ET
 import ssl
 import zlib
 from urllib import request
@@ -456,21 +456,21 @@ def getComments(cid,font_size = 25):
 
 def write2file(comments, directory, stage_width, stage_height,reserve_blank=0, font_face=_('(FONT) sans-serif')[7:], font_size=25.0, text_opacity=1.0, duration_marquee=5.0, duration_still=5.0, comment_filter=None, comment_filters_file=None, is_reduce_comments=False, progress_callback=None):
     filters_regex = []
-    
+
     if comment_filter and ( comment_filters or comment_filters_file):
         comment_filters = [comment_filter]
         if comment_filters_file:
             with open(comment_filters_file, 'r', encoding='utf-8') as f:
                 d = f.readlines()
                 comment_filters.extend([i.strip() for i in d])
-        
+
         for comment_filter in comment_filters:
             try:
                 if comment_filter:
                     filters_regex.append(compile(comment_filter))
             except:
                 raise ValueError(_('Invalid regular expression: %s') % comment_filter)
-                
+
     ass_path = ''.join([directory, '/bilibili.ass'])
 
     if (platform().find('Windows') != -1):
@@ -521,5 +521,4 @@ def main():
     write2file(comments, directory, width, height, args.protect, args.font, args.fontsize, args.alpha,  args.duration_marquee, args.duration_still, args.filter, args.filter_file, args.reduce)
 
 if __name__ == "__main__":
-    
     main()

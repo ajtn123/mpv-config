@@ -28,7 +28,7 @@
 //!COMPONENTS 1
 
 float get_luma(vec4 rgba) {
-	return dot(vec4(0.299, 0.587, 0.114, 0.0), rgba);
+    return dot(vec4(0.299, 0.587, 0.114, 0.0), rgba);
 }
 
 vec4 hook() {
@@ -48,25 +48,25 @@ vec4 hook() {
 #define SIGMA 1.0
 
 float gaussian(float x, float s, float m) {
-	return (1.0 / (s * sqrt(2.0 * 3.14159))) * exp(-0.5 * pow(abs(x - m) / s, 2.0));
+    return (1.0 / (s * sqrt(2.0 * 3.14159))) * exp(-0.5 * pow(abs(x - m) / s, 2.0));
 }
 
 float lumGaussian(vec2 pos, vec2 d) {
-	float s = SIGMA * HOOKED_size.y / 1080.0;
-	float kernel_size = s * 2.0 + 1.0;
-	
-	float g = (L_tex(pos).x) * gaussian(0.0, s, 0.0);
-	float gn = gaussian(0.0, s, 0.0);
-	
-	g += (L_tex(pos - d).x + L_tex(pos + d).x) * gaussian(1.0, s, 0.0);
-	gn += gaussian(1.0, s, 0.0) * 2.0;
-	
-	for (int i=2; float(i)<kernel_size; i++) {
-		g += (L_tex(pos - (d * float(i))).x + L_tex(pos + (d * float(i))).x) * gaussian(float(i), s, 0.0);
-		gn += gaussian(float(i), s, 0.0) * 2.0;
-	}
-	
-	return g / gn;
+    float s = SIGMA * HOOKED_size.y / 1080.0;
+    float kernel_size = s * 2.0 + 1.0;
+
+    float g = (L_tex(pos).x) * gaussian(0.0, s, 0.0);
+    float gn = gaussian(0.0, s, 0.0);
+
+    g += (L_tex(pos - d).x + L_tex(pos + d).x) * gaussian(1.0, s, 0.0);
+    gn += gaussian(1.0, s, 0.0) * 2.0;
+
+    for (int i=2; float(i)<kernel_size; i++) {
+        g += (L_tex(pos - (d * float(i))).x + L_tex(pos + (d * float(i))).x) * gaussian(float(i), s, 0.0);
+        gn += gaussian(float(i), s, 0.0) * 2.0;
+    }
+
+    return g / gn;
 }
 
 vec4 hook() {
@@ -87,25 +87,25 @@ vec4 hook() {
 #define SIGMA 1.0
 
 float gaussian(float x, float s, float m) {
-	return (1.0 / (s * sqrt(2.0 * 3.14159))) * exp(-0.5 * pow(abs(x - m) / s, 2.0));
+    return (1.0 / (s * sqrt(2.0 * 3.14159))) * exp(-0.5 * pow(abs(x - m) / s, 2.0));
 }
 
 float lumGaussian(vec2 pos, vec2 d) {
-	float s = SIGMA * HOOKED_size.y / 1080.0;
-	float kernel_size = s * 2.0 + 1.0;
-	
-	float g = (L_tex(pos).x) * gaussian(0.0, s, 0.0);
-	float gn = gaussian(0.0, s, 0.0);
-	
-	g += (L_tex(pos - d).x + L_tex(pos + d).x) * gaussian(1.0, s, 0.0);
-	gn += gaussian(1.0, s, 0.0) * 2.0;
-	
-	for (int i=2; float(i)<kernel_size; i++) {
-		g += (L_tex(pos - (d * float(i))).x + L_tex(pos + (d * float(i))).x) * gaussian(float(i), s, 0.0);
-		gn += gaussian(float(i), s, 0.0) * 2.0;
-	}
-	
-	return g / gn;
+    float s = SIGMA * HOOKED_size.y / 1080.0;
+    float kernel_size = s * 2.0 + 1.0;
+
+    float g = (L_tex(pos).x) * gaussian(0.0, s, 0.0);
+    float gn = gaussian(0.0, s, 0.0);
+
+    g += (L_tex(pos - d).x + L_tex(pos + d).x) * gaussian(1.0, s, 0.0);
+    gn += gaussian(1.0, s, 0.0) * 2.0;
+
+    for (int i=2; float(i)<kernel_size; i++) {
+        g += (L_tex(pos - (d * float(i))).x + L_tex(pos + (d * float(i))).x) * gaussian(float(i), s, 0.0);
+        gn += gaussian(float(i), s, 0.0) * 2.0;
+    }
+
+    return g / gn;
 }
 
 vec4 hook() {
@@ -125,25 +125,25 @@ vec4 hook() {
 #define SIGMA 0.4
 
 float gaussian(float x, float s, float m) {
-	return (1.0 / (s * sqrt(2.0 * 3.14159))) * exp(-0.5 * pow(abs(x - m) / s, 2.0));
+    return (1.0 / (s * sqrt(2.0 * 3.14159))) * exp(-0.5 * pow(abs(x - m) / s, 2.0));
 }
 
 float lumGaussian(vec2 pos, vec2 d) {
-	float s = SIGMA * HOOKED_size.y / 1080.0;
-	float kernel_size = s * 2.0 + 1.0;
-	
-	float g = (L_tex(pos).x) * gaussian(0.0, s, 0.0);
-	float gn = gaussian(0.0, s, 0.0);
-	
-	g += (L_tex(pos - d).x + L_tex(pos + d).x) * gaussian(1.0, s, 0.0);
-	gn += gaussian(1.0, s, 0.0) * 2.0;
-	
-	for (int i=2; float(i)<kernel_size; i++) {
-		g += (L_tex(pos - (d * float(i))).x + L_tex(pos + (d * float(i))).x) * gaussian(float(i), s, 0.0);
-		gn += gaussian(float(i), s, 0.0) * 2.0;
-	}
-	
-	return g / gn;
+    float s = SIGMA * HOOKED_size.y / 1080.0;
+    float kernel_size = s * 2.0 + 1.0;
+
+    float g = (L_tex(pos).x) * gaussian(0.0, s, 0.0);
+    float gn = gaussian(0.0, s, 0.0);
+
+    g += (L_tex(pos - d).x + L_tex(pos + d).x) * gaussian(1.0, s, 0.0);
+    gn += gaussian(1.0, s, 0.0) * 2.0;
+
+    for (int i=2; float(i)<kernel_size; i++) {
+        g += (L_tex(pos - (d * float(i))).x + L_tex(pos + (d * float(i))).x) * gaussian(float(i), s, 0.0);
+        gn += gaussian(float(i), s, 0.0) * 2.0;
+    }
+
+    return g / gn;
 }
 
 vec4 hook() {
@@ -163,25 +163,25 @@ vec4 hook() {
 #define SIGMA 0.4
 
 float gaussian(float x, float s, float m) {
-	return (1.0 / (s * sqrt(2.0 * 3.14159))) * exp(-0.5 * pow(abs(x - m) / s, 2.0));
+    return (1.0 / (s * sqrt(2.0 * 3.14159))) * exp(-0.5 * pow(abs(x - m) / s, 2.0));
 }
 
 float lumGaussian(vec2 pos, vec2 d) {
-	float s = SIGMA * HOOKED_size.y / 1080.0;
-	float kernel_size = s * 2.0 + 1.0;
-	
-	float g = (L_tex(pos).x) * gaussian(0.0, s, 0.0);
-	float gn = gaussian(0.0, s, 0.0);
-	
-	g += (L_tex(pos - d).x + L_tex(pos + d).x) * gaussian(1.0, s, 0.0);
-	gn += gaussian(1.0, s, 0.0) * 2.0;
-	
-	for (int i=2; float(i)<kernel_size; i++) {
-		g += (L_tex(pos - (d * float(i))).x + L_tex(pos + (d * float(i))).x) * gaussian(float(i), s, 0.0);
-		gn += gaussian(float(i), s, 0.0) * 2.0;
-	}
-	
-	return g / gn;
+    float s = SIGMA * HOOKED_size.y / 1080.0;
+    float kernel_size = s * 2.0 + 1.0;
+
+    float g = (L_tex(pos).x) * gaussian(0.0, s, 0.0);
+    float gn = gaussian(0.0, s, 0.0);
+
+    g += (L_tex(pos - d).x + L_tex(pos + d).x) * gaussian(1.0, s, 0.0);
+    gn += gaussian(1.0, s, 0.0) * 2.0;
+
+    for (int i=2; float(i)<kernel_size; i++) {
+        g += (L_tex(pos - (d * float(i))).x + L_tex(pos + (d * float(i))).x) * gaussian(float(i), s, 0.0);
+        gn += gaussian(float(i), s, 0.0) * 2.0;
+    }
+
+    return g / gn;
 }
 
 vec4 hook() {
@@ -197,9 +197,9 @@ vec4 hook() {
 #define STRENGTH 1.8 //Line darken proportional strength, higher is darker.
 
 vec4 hook() {
-	float c = (MMKERNEL_tex(HOOKED_pos).x) * STRENGTH;
-	//This trick is only possible if the inverse Y->RGB matrix has 1 for every row... (which is the case for BT.709)
-	//Otherwise we would need to convert RGB to YUV, modify Y then convert back to RGB.
+    float c = (MMKERNEL_tex(HOOKED_pos).x) * STRENGTH;
+    //This trick is only possible if the inverse Y->RGB matrix has 1 for every row... (which is the case for BT.709)
+    //Otherwise we would need to convert RGB to YUV, modify Y then convert back to RGB.
     return HOOKED_tex(HOOKED_pos) + c;
 }
 
@@ -210,7 +210,7 @@ vec4 hook() {
 //!COMPONENTS 1
 
 float get_luma(vec4 rgba) {
-	return dot(vec4(0.299, 0.587, 0.114, 0.0), rgba);
+    return dot(vec4(0.299, 0.587, 0.114, 0.0), rgba);
 }
 
 vec4 hook() {
@@ -228,32 +228,30 @@ vec4 hook() {
 #define L_tex LINELUMA_tex
 
 vec4 hook() {
-	vec2 d = HOOKED_pt;
-	
-	//[tl  t tr]
-	//[ l  c  r]
-	//[bl  b br]
-	float l = L_tex(HOOKED_pos + vec2(-d.x, 0)).x;
-	float c = L_tex(HOOKED_pos).x;
-	float r = L_tex(HOOKED_pos + vec2(d.x, 0)).x;
-	
-	
-	//Horizontal Gradient
-	//[-1  0  1]
-	//[-2  0  2]
-	//[-1  0  1]
-	float xgrad = (-l + r);
-	
-	//Vertical Gradient
-	//[-1 -2 -1]
-	//[ 0  0  0]
-	//[ 1  2  1]
-	float ygrad = (l + c + c + r);
-	
-	//Computes the luminance's gradient
-	return vec4(xgrad, ygrad, 0, 0);
-}
+    vec2 d = HOOKED_pt;
 
+    //[tl  t tr]
+    //[ l  c  r]
+    //[bl  b br]
+    float l = L_tex(HOOKED_pos + vec2(-d.x, 0)).x;
+    float c = L_tex(HOOKED_pos).x;
+    float r = L_tex(HOOKED_pos + vec2(d.x, 0)).x;
+
+    //Horizontal Gradient
+    //[-1  0  1]
+    //[-2  0  2]
+    //[-1  0  1]
+    float xgrad = (-l + r);
+
+    //Vertical Gradient
+    //[-1 -2 -1]
+    //[ 0  0  0]
+    //[ 1  2  1]
+    float ygrad = (l + c + c + r);
+
+    //Computes the luminance's gradient
+    return vec4(xgrad, ygrad, 0, 0);
+}
 
 //!DESC Anime4K-v3.2-Upscale-DTD-x2-Kernel-Y
 //!WHEN OUTPUT.w MAIN.w / 1.200 > OUTPUT.h MAIN.h / 1.200 > *
@@ -264,38 +262,35 @@ vec4 hook() {
 //!COMPONENTS 1
 
 vec4 hook() {
-	vec2 d = HOOKED_pt;
-	
-	//[tl  t tr]
-	//[ l cc  r]
-	//[bl  b br]
-	float tx = LUMAD_tex(HOOKED_pos + vec2(0, -d.y)).x;
-	float cx = LUMAD_tex(HOOKED_pos).x;
-	float bx = LUMAD_tex(HOOKED_pos + vec2(0, d.y)).x;
-	
-	
-	float ty = LUMAD_tex(HOOKED_pos + vec2(0, -d.y)).y;
-	//float cy = LUMAD_tex(HOOKED_pos).y;
-	float by = LUMAD_tex(HOOKED_pos + vec2(0, d.y)).y;
-	
-	
-	//Horizontal Gradient
-	//[-1  0  1]
-	//[-2  0  2]
-	//[-1  0  1]
-	float xgrad = (tx + cx + cx + bx) / 8.0;
-	
-	//Vertical Gradient
-	//[-1 -2 -1]
-	//[ 0  0  0]
-	//[ 1  2  1]
-	float ygrad = (-ty + by) / 8.0;
-	
-	//Computes the luminance's gradient
-	float norm = sqrt(xgrad * xgrad + ygrad * ygrad);
-	return vec4(pow(norm, 0.7));
-}
+    vec2 d = HOOKED_pt;
 
+    //[tl  t tr]
+    //[ l cc  r]
+    //[bl  b br]
+    float tx = LUMAD_tex(HOOKED_pos + vec2(0, -d.y)).x;
+    float cx = LUMAD_tex(HOOKED_pos).x;
+    float bx = LUMAD_tex(HOOKED_pos + vec2(0, d.y)).x;
+
+    float ty = LUMAD_tex(HOOKED_pos + vec2(0, -d.y)).y;
+    //float cy = LUMAD_tex(HOOKED_pos).y;
+    float by = LUMAD_tex(HOOKED_pos + vec2(0, d.y)).y;
+
+    //Horizontal Gradient
+    //[-1  0  1]
+    //[-2  0  2]
+    //[-1  0  1]
+    float xgrad = (tx + cx + cx + bx) / 8.0;
+
+    //Vertical Gradient
+    //[-1 -2 -1]
+    //[ 0  0  0]
+    //[ 1  2  1]
+    float ygrad = (-ty + by) / 8.0;
+
+    //Computes the luminance's gradient
+    float norm = sqrt(xgrad * xgrad + ygrad * ygrad);
+    return vec4(pow(norm, 0.7));
+}
 
 //!DESC Anime4K-v3.2-Upscale-DTD-x2-Kernel-X
 //!WHEN OUTPUT.w MAIN.w / 1.200 > OUTPUT.h MAIN.h / 1.200 > *
@@ -311,23 +306,22 @@ vec4 hook() {
 #define KERNELSIZE (SIGMA * 2.0 + 1.0)
 
 float gaussian(float x, float s, float m) {
-	return (1.0 / (s * sqrt(2.0 * 3.14159))) * exp(-0.5 * pow(abs(x - m) / s, 2.0));
+    return (1.0 / (s * sqrt(2.0 * 3.14159))) * exp(-0.5 * pow(abs(x - m) / s, 2.0));
 }
 
 float lumGaussian(vec2 pos, vec2 d) {
-	float g = (L_tex(pos).x) * gaussian(0.0, SIGMA, 0.0);
-	g = g + (L_tex(pos - d).x + L_tex(pos + d).x) * gaussian(1.0, SIGMA, 0.0);
-	for (int i=2; float(i)<KERNELSIZE; i++) {
-		g = g + (L_tex(pos - (d * float(i))).x + L_tex(pos + (d * float(i))).x) * gaussian(float(i), SIGMA, 0.0);
-	}
-	
-	return g;
+    float g = (L_tex(pos).x) * gaussian(0.0, SIGMA, 0.0);
+    g = g + (L_tex(pos - d).x + L_tex(pos + d).x) * gaussian(1.0, SIGMA, 0.0);
+    for (int i=2; float(i)<KERNELSIZE; i++) {
+        g = g + (L_tex(pos - (d * float(i))).x + L_tex(pos + (d * float(i))).x) * gaussian(float(i), SIGMA, 0.0);
+    }
+
+    return g;
 }
 
 vec4 hook() {
     return vec4(lumGaussian(HOOKED_pos, vec2(HOOKED_pt.x, 0)));
 }
-
 
 //!DESC Anime4K-v3.2-Upscale-DTD-x2-Kernel-Y
 //!WHEN OUTPUT.w MAIN.w / 1.200 > OUTPUT.h MAIN.h / 1.200 > *
@@ -344,26 +338,23 @@ vec4 hook() {
 #define KERNELSIZE (SIGMA * 2.0 + 1.0)
 
 float gaussian(float x, float s, float m) {
-	return (1.0 / (s * sqrt(2.0 * 3.14159))) * exp(-0.5 * pow(abs(x - m) / s, 2.0));
+    return (1.0 / (s * sqrt(2.0 * 3.14159))) * exp(-0.5 * pow(abs(x - m) / s, 2.0));
 }
 
 float lumGaussian(vec2 pos, vec2 d) {
-	float g = (L_tex(pos).x) * gaussian(0.0, SIGMA, 0.0);
-	g = g + (L_tex(pos - d).x + L_tex(pos + d).x) * gaussian(1.0, SIGMA, 0.0);
-	for (int i=2; float(i)<KERNELSIZE; i++) {
-		g = g + (L_tex(pos - (d * float(i))).x + L_tex(pos + (d * float(i))).x) * gaussian(float(i), SIGMA, 0.0);
-	}
-	
-	return g;
+    float g = (L_tex(pos).x) * gaussian(0.0, SIGMA, 0.0);
+    g = g + (L_tex(pos - d).x + L_tex(pos + d).x) * gaussian(1.0, SIGMA, 0.0);
+    for (int i=2; float(i)<KERNELSIZE; i++) {
+        g = g + (L_tex(pos - (d * float(i))).x + L_tex(pos + (d * float(i))).x) * gaussian(float(i), SIGMA, 0.0);
+    }
+
+    return g;
 }
 
 vec4 hook() {
-	float g = lumGaussian(HOOKED_pos, vec2(0, HOOKED_pt.y));
+    float g = lumGaussian(HOOKED_pos, vec2(0, HOOKED_pt.y));
     return vec4(g);
 }
-
-
-
 
 //!DESC Anime4K-v3.2-Upscale-DTD-x2-Kernel-X
 //!WHEN OUTPUT.w MAIN.w / 1.200 > OUTPUT.h MAIN.h / 1.200 > *
@@ -374,32 +365,30 @@ vec4 hook() {
 //!COMPONENTS 2
 
 vec4 hook() {
-	vec2 d = HOOKED_pt;
-	
-	//[tl  t tr]
-	//[ l  c  r]
-	//[bl  b br]
-	float l = LUMAD_tex(HOOKED_pos + vec2(-d.x, 0)).x;
-	float c = LUMAD_tex(HOOKED_pos).x;
-	float r = LUMAD_tex(HOOKED_pos + vec2(d.x, 0)).x;
-	
-	
-	//Horizontal Gradient
-	//[-1  0  1]
-	//[-2  0  2]
-	//[-1  0  1]
-	float xgrad = (-l + r);
-	
-	//Vertical Gradient
-	//[-1 -2 -1]
-	//[ 0  0  0]
-	//[ 1  2  1]
-	float ygrad = (l + c + c + r);
-	
-	//Computes the luminance's gradient
-	return vec4(xgrad, ygrad, 0, 0);
-}
+    vec2 d = HOOKED_pt;
 
+    //[tl  t tr]
+    //[ l  c  r]
+    //[bl  b br]
+    float l = LUMAD_tex(HOOKED_pos + vec2(-d.x, 0)).x;
+    float c = LUMAD_tex(HOOKED_pos).x;
+    float r = LUMAD_tex(HOOKED_pos + vec2(d.x, 0)).x;
+
+    //Horizontal Gradient
+    //[-1  0  1]
+    //[-2  0  2]
+    //[-1  0  1]
+    float xgrad = (-l + r);
+
+    //Vertical Gradient
+    //[-1 -2 -1]
+    //[ 0  0  0]
+    //[ 1  2  1]
+    float ygrad = (l + c + c + r);
+
+    //Computes the luminance's gradient
+    return vec4(xgrad, ygrad, 0, 0);
+}
 
 //!DESC Anime4K-v3.2-Upscale-DTD-x2-Kernel-Y
 //!WHEN OUTPUT.w MAIN.w / 1.200 > OUTPUT.h MAIN.h / 1.200 > *
@@ -410,35 +399,33 @@ vec4 hook() {
 //!COMPONENTS 2
 
 vec4 hook() {
-	vec2 d = HOOKED_pt;
-	
-	//[tl  t tr]
-	//[ l cc  r]
-	//[bl  b br]
-	float tx = LUMAD2_tex(HOOKED_pos + vec2(0, -d.y)).x;
-	float cx = LUMAD2_tex(HOOKED_pos).x;
-	float bx = LUMAD2_tex(HOOKED_pos + vec2(0, d.y)).x;
-	
-	
-	float ty = LUMAD2_tex(HOOKED_pos + vec2(0, -d.y)).y;
-	//float cy = LUMAD2_tex(HOOKED_pos).y;
-	float by = LUMAD2_tex(HOOKED_pos + vec2(0, d.y)).y;
-	
-	
-	//Horizontal Gradient
-	//[-1  0  1]
-	//[-2  0  2]
-	//[-1  0  1]
-	float xgrad = (tx + cx + cx + bx) / 8.0;
-	
-	//Vertical Gradient
-	//[-1 -2 -1]
-	//[ 0  0  0]
-	//[ 1  2  1]
-	float ygrad = (-ty + by) / 8.0;
-	
-	//Computes the luminance's gradient
-	return vec4(xgrad, ygrad, 0, 0);
+    vec2 d = HOOKED_pt;
+
+    //[tl  t tr]
+    //[ l cc  r]
+    //[bl  b br]
+    float tx = LUMAD2_tex(HOOKED_pos + vec2(0, -d.y)).x;
+    float cx = LUMAD2_tex(HOOKED_pos).x;
+    float bx = LUMAD2_tex(HOOKED_pos + vec2(0, d.y)).x;
+
+    float ty = LUMAD2_tex(HOOKED_pos + vec2(0, -d.y)).y;
+    //float cy = LUMAD2_tex(HOOKED_pos).y;
+    float by = LUMAD2_tex(HOOKED_pos + vec2(0, d.y)).y;
+
+    //Horizontal Gradient
+    //[-1  0  1]
+    //[-2  0  2]
+    //[-1  0  1]
+    float xgrad = (tx + cx + cx + bx) / 8.0;
+
+    //Vertical Gradient
+    //[-1 -2 -1]
+    //[ 0  0  0]
+    //[ 1  2  1]
+    float ygrad = (-ty + by) / 8.0;
+
+    //Computes the luminance's gradient
+    return vec4(xgrad, ygrad, 0, 0);
 }
 
 //!DESC Anime4K-v3.2-Upscale-DTD-x2
@@ -457,19 +444,18 @@ vec4 hook() {
 #define L_tex HOOKED_tex
 
 vec4 hook() {
-	vec2 d = HOOKED_pt;
-	
-	float relstr = HOOKED_size.y / 1080.0 * STRENGTH;
-	
-	vec2 pos = HOOKED_pos;
-	for (int i=0; i<ITERATIONS; i++) {
-		vec2 dn = LUMAD2_tex(pos).xy;
-		vec2 dd = (dn / (length(dn) + 0.01)) * d * relstr; //Quasi-normalization for large vectors, avoids divide by zero
-		pos -= dd;
-	}
-	
-	return L_tex(pos);
-	
+    vec2 d = HOOKED_pt;
+
+    float relstr = HOOKED_size.y / 1080.0 * STRENGTH;
+
+    vec2 pos = HOOKED_pos;
+    for (int i=0; i<ITERATIONS; i++) {
+        vec2 dn = LUMAD2_tex(pos).xy;
+        vec2 dd = (dn / (length(dn) + 0.01)) * d * relstr; //Quasi-normalization for large vectors, avoids divide by zero
+        pos -= dd;
+    }
+
+    return L_tex(pos);
 }
 
 //!DESC Anime4K-v3.2-Upscale-DTD-x2-Luma
@@ -482,7 +468,7 @@ vec4 hook() {
 //!HEIGHT MAIN.h 2 *
 
 float get_luma(vec4 rgba) {
-	return dot(vec4(0.299, 0.587, 0.114, 0.0), rgba);
+    return dot(vec4(0.299, 0.587, 0.114, 0.0), rgba);
 }
 
 vec4 hook() {
@@ -500,33 +486,31 @@ vec4 hook() {
 #define L_tex MAINTEMP_tex
 
 float max3v(float a, float b, float c) {
-	return max(max(a, b), c);
+    return max(max(a, b), c);
 }
 float min3v(float a, float b, float c) {
-	return min(min(a, b), c);
+    return min(min(a, b), c);
 }
 
 vec2 minmax3(vec2 pos, vec2 d) {
-	float a = L_tex(pos - d).x;
-	float b = L_tex(pos).x;
-	float c = L_tex(pos + d).x;
-	
-	return vec2(min3v(a, b, c), max3v(a, b, c));
+    float a = L_tex(pos - d).x;
+    float b = L_tex(pos).x;
+    float c = L_tex(pos + d).x;
+
+    return vec2(min3v(a, b, c), max3v(a, b, c));
 }
 
 float lumGaussian7(vec2 pos, vec2 d) {
-	float g = (L_tex(pos - (d + d)).x + L_tex(pos + (d + d)).x) * 0.06136;
-	g = g + (L_tex(pos - d).x + L_tex(pos + d).x) * 0.24477;
-	g = g + (L_tex(pos).x) * 0.38774;
-	
-	return g;
-}
+    float g = (L_tex(pos - (d + d)).x + L_tex(pos + (d + d)).x) * 0.06136;
+    g = g + (L_tex(pos - d).x + L_tex(pos + d).x) * 0.24477;
+    g = g + (L_tex(pos).x) * 0.38774;
 
+    return g;
+}
 
 vec4 hook() {
     return vec4(lumGaussian7(HOOKED_pos, vec2(HOOKED_pt.x, 0)), minmax3(HOOKED_pos, vec2(HOOKED_pt.x, 0)), 0);
 }
-
 
 //!DESC Anime4K-v3.2-Upscale-DTD-x2-Kernel-Y
 //!WHEN OUTPUT.w MAIN.w / 1.200 > OUTPUT.h MAIN.h / 1.200 > *
@@ -539,32 +523,31 @@ vec4 hook() {
 #define L_tex MMKERNEL_tex
 
 float max3v(float a, float b, float c) {
-	return max(max(a, b), c);
+    return max(max(a, b), c);
 }
 float min3v(float a, float b, float c) {
-	return min(min(a, b), c);
+    return min(min(a, b), c);
 }
 
 vec2 minmax3(vec2 pos, vec2 d) {
-	float a0 = L_tex(pos - d).y;
-	float b0 = L_tex(pos).y;
-	float c0 = L_tex(pos + d).y;
-	
-	float a1 = L_tex(pos - d).z;
-	float b1 = L_tex(pos).z;
-	float c1 = L_tex(pos + d).z;
-	
-	return vec2(min3v(a0, b0, c0), max3v(a1, b1, c1));
+    float a0 = L_tex(pos - d).y;
+    float b0 = L_tex(pos).y;
+    float c0 = L_tex(pos + d).y;
+
+    float a1 = L_tex(pos - d).z;
+    float b1 = L_tex(pos).z;
+    float c1 = L_tex(pos + d).z;
+
+    return vec2(min3v(a0, b0, c0), max3v(a1, b1, c1));
 }
 
 float lumGaussian7(vec2 pos, vec2 d) {
-	float g = (L_tex(pos - (d + d)).x + L_tex(pos + (d + d)).x) * 0.06136;
-	g = g + (L_tex(pos - d).x + L_tex(pos + d).x) * 0.24477;
-	g = g + (L_tex(pos).x) * 0.38774;
-	
-	return g;
-}
+    float g = (L_tex(pos - (d + d)).x + L_tex(pos + (d + d)).x) * 0.06136;
+    g = g + (L_tex(pos - d).x + L_tex(pos + d).x) * 0.24477;
+    g = g + (L_tex(pos).x) * 0.38774;
 
+    return g;
+}
 
 vec4 hook() {
     return vec4(lumGaussian7(HOOKED_pos, vec2(0, HOOKED_pt.y)), minmax3(HOOKED_pos, vec2(0, HOOKED_pt.y)), 0);
@@ -588,26 +571,23 @@ vec4 hook() {
 #define L_tex MAINTEMP_tex
 
 vec4 hook() {
-	float c = (L_tex(HOOKED_pos).x - MMKERNEL_tex(HOOKED_pos).x) * STRENGTH;
-	
-	float t_range = BLUR_THRESHOLD - NOISE_THRESHOLD;
-	
-	float c_t = abs(c);
-	if (c_t > NOISE_THRESHOLD) {
-		c_t = (c_t - NOISE_THRESHOLD) / t_range;
-		c_t = pow(c_t, BLUR_CURVE);
-		c_t = c_t * t_range + NOISE_THRESHOLD;
-		c_t = c_t * sign(c);
-	} else {
-		c_t = c;
-	}
-	
-	float cc = clamp(c_t + L_tex(HOOKED_pos).x, MMKERNEL_tex(HOOKED_pos).y, MMKERNEL_tex(HOOKED_pos).z) - L_tex(HOOKED_pos).x;
-	
-	//This trick is only possible if the inverse Y->RGB matrix has 1 for every row... (which is the case for BT.709)
-	//Otherwise we would need to convert RGB to YUV, modify Y then convert back to RGB.
-	return MAINTEMPTHIN_tex(HOOKED_pos) + cc;
+    float c = (L_tex(HOOKED_pos).x - MMKERNEL_tex(HOOKED_pos).x) * STRENGTH;
+
+    float t_range = BLUR_THRESHOLD - NOISE_THRESHOLD;
+
+    float c_t = abs(c);
+    if (c_t > NOISE_THRESHOLD) {
+        c_t = (c_t - NOISE_THRESHOLD) / t_range;
+        c_t = pow(c_t, BLUR_CURVE);
+        c_t = c_t * t_range + NOISE_THRESHOLD;
+        c_t = c_t * sign(c);
+    } else {
+        c_t = c;
+    }
+
+    float cc = clamp(c_t + L_tex(HOOKED_pos).x, MMKERNEL_tex(HOOKED_pos).y, MMKERNEL_tex(HOOKED_pos).z) - L_tex(HOOKED_pos).x;
+
+    //This trick is only possible if the inverse Y->RGB matrix has 1 for every row... (which is the case for BT.709)
+    //Otherwise we would need to convert RGB to YUV, modify Y then convert back to RGB.
+    return MAINTEMPTHIN_tex(HOOKED_pos) + cc;
 }
-
-
-

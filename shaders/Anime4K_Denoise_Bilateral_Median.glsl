@@ -28,7 +28,7 @@
 //!COMPONENTS 1
 
 float get_luma(vec4 rgba) {
-	return dot(vec4(0.299, 0.587, 0.114, 0.0), rgba);
+    return dot(vec4(0.299, 0.587, 0.114, 0.0), rgba);
 }
 
 vec4 hook() {
@@ -53,68 +53,67 @@ vec4 hook() {
 #define GETOFFSET(i) vec2((i % KERNELSIZE) - KERNELHALFSIZE, (i / KERNELSIZE) - KERNELHALFSIZE)
 
 float gaussian(float x, float s, float m) {
-	float scaled = (x - m) / s;
-	return exp(-0.5 * scaled * scaled);
+    float scaled = (x - m) / s;
+    return exp(-0.5 * scaled * scaled);
 }
 
 vec4 getMedian(vec4 v[KERNELLEN], float w[KERNELLEN], float n) {
-	
-	for (int i=0; i<KERNELLEN; i++) {
-		float w_above = 0.0;
-		float w_below = 0.0;
-		for (int j=0; j<KERNELLEN; j++) {
-			if (v[j].x > v[i].x) {
-				w_above += w[j];
-			} else if (v[j].x < v[i].x) {
-				w_below += w[j];
-			}
-		}
-		
-		if ((n - w_above) / n >= 0.5 && w_below / n <= 0.5) {
-			return v[i];
-		}
-	}
+    for (int i=0; i<KERNELLEN; i++) {
+        float w_above = 0.0;
+        float w_below = 0.0;
+        for (int j=0; j<KERNELLEN; j++) {
+            if (v[j].x > v[i].x) {
+                w_above += w[j];
+            } else if (v[j].x < v[i].x) {
+                w_below += w[j];
+            }
+        }
+
+        if ((n - w_above) / n >= 0.5 && w_below / n <= 0.5) {
+            return v[i];
+        }
+    }
 }
 
 vec4 hook() {
-	vec4 histogram_v[KERNELLEN];
-	float histogram_l[KERNELLEN];
-	float histogram_w[KERNELLEN];
-	float n = 0.0;
-	
-	float vc = LINELUMA_tex(HOOKED_pos).x;
-	
-	float is = pow(vc + 0.0001, INTENSITY_POWER_CURVE) * INTENSITY_SIGMA;
-	float ss = SPATIAL_SIGMA;
-	
-	for (int i=0; i<KERNELLEN; i++) {
-		vec2 ipos = GETOFFSET(i);
-		histogram_v[i] = HOOKED_texOff(ipos);
-		histogram_l[i] = LINELUMA_texOff(ipos).x;
-		histogram_w[i] = gaussian(histogram_l[i], is, vc) * gaussian(length(ipos), ss, 0.0);
-		n += histogram_w[i];
-	}
-	
-	if (HISTOGRAM_REGULARIZATION > 0.0) {
-		float histogram_wn[KERNELLEN];
-		n = 0.0;
-		
-		for (int i=0; i<KERNELLEN; i++) {
-			histogram_wn[i] = 0.0;
-		}
-		
-		for (int i=0; i<KERNELLEN; i++) {
-			histogram_wn[i] += gaussian(0.0, HISTOGRAM_REGULARIZATION, 0.0) * histogram_w[i];
-			for (int j=(i+1); j<KERNELLEN; j++) {
-				float d = gaussian(histogram_l[j], HISTOGRAM_REGULARIZATION, histogram_l[i]);
-				histogram_wn[j] += d * histogram_w[i];
-				histogram_wn[i] += d * histogram_w[j];
-			}
-			n += histogram_wn[i];
-		}
-	
-		return getMedian(histogram_v, histogram_wn, n);
-	}
-	
-	return getMedian(histogram_v, histogram_w, n);
+    vec4 histogram_v[KERNELLEN];
+    float histogram_l[KERNELLEN];
+    float histogram_w[KERNELLEN];
+    float n = 0.0;
+
+    float vc = LINELUMA_tex(HOOKED_pos).x;
+
+    float is = pow(vc + 0.0001, INTENSITY_POWER_CURVE) * INTENSITY_SIGMA;
+    float ss = SPATIAL_SIGMA;
+
+    for (int i=0; i<KERNELLEN; i++) {
+        vec2 ipos = GETOFFSET(i);
+        histogram_v[i] = HOOKED_texOff(ipos);
+        histogram_l[i] = LINELUMA_texOff(ipos).x;
+        histogram_w[i] = gaussian(histogram_l[i], is, vc) * gaussian(length(ipos), ss, 0.0);
+        n += histogram_w[i];
+    }
+
+    if (HISTOGRAM_REGULARIZATION > 0.0) {
+        float histogram_wn[KERNELLEN];
+        n = 0.0;
+
+        for (int i=0; i<KERNELLEN; i++) {
+            histogram_wn[i] = 0.0;
+        }
+
+        for (int i=0; i<KERNELLEN; i++) {
+            histogram_wn[i] += gaussian(0.0, HISTOGRAM_REGULARIZATION, 0.0) * histogram_w[i];
+            for (int j=(i+1); j<KERNELLEN; j++) {
+                float d = gaussian(histogram_l[j], HISTOGRAM_REGULARIZATION, histogram_l[i]);
+                histogram_wn[j] += d * histogram_w[i];
+                histogram_wn[i] += d * histogram_w[j];
+            }
+            n += histogram_wn[i];
+        }
+
+        return getMedian(histogram_v, histogram_wn, n);
+    }
+
+    return getMedian(histogram_v, histogram_w, n);
 }

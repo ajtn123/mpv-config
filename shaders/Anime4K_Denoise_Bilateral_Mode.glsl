@@ -28,7 +28,7 @@
 //!COMPONENTS 1
 
 float get_luma(vec4 rgba) {
-	return dot(vec4(0.299, 0.587, 0.114, 0.0), rgba);
+    return dot(vec4(0.299, 0.587, 0.114, 0.0), rgba);
 }
 
 vec4 hook() {
@@ -53,51 +53,51 @@ vec4 hook() {
 #define GETOFFSET(i) vec2((i % KERNELSIZE) - KERNELHALFSIZE, (i / KERNELSIZE) - KERNELHALFSIZE)
 
 float gaussian(float x, float s, float m) {
-	float scaled = (x - m) / s;
-	return exp(-0.5 * scaled * scaled);
+    float scaled = (x - m) / s;
+    return exp(-0.5 * scaled * scaled);
 }
 
 vec4 getMode(vec4 v[KERNELLEN], float w[KERNELLEN]) {
-	vec4 maxv = vec4(0);
-	float maxw = 0.0;
-	
-	for (int i=0; i<KERNELLEN; i++) {
-		if (w[i] >= maxw) {
-			maxw = w[i];
-			maxv = v[i];
-		}
-	}
-	
-	return maxv;
+    vec4 maxv = vec4(0);
+    float maxw = 0.0;
+
+    for (int i=0; i<KERNELLEN; i++) {
+        if (w[i] >= maxw) {
+            maxw = w[i];
+            maxv = v[i];
+        }
+    }
+
+    return maxv;
 }
 
 vec4 hook() {
-	vec4 histogram_v[KERNELLEN];
-	float histogram_l[KERNELLEN];
-	float histogram_w[KERNELLEN];
-	float histogram_wn[KERNELLEN];
-	
-	float vc = LINELUMA_tex(HOOKED_pos).x;
-	
-	float is = pow(vc + 0.0001, INTENSITY_POWER_CURVE) * INTENSITY_SIGMA;
-	float ss = SPATIAL_SIGMA;
-	
-	for (int i=0; i<KERNELLEN; i++) {
-		vec2 ipos = GETOFFSET(i);
-		histogram_v[i] = HOOKED_texOff(ipos);
-		histogram_l[i] = LINELUMA_texOff(ipos).x;
-		histogram_w[i] = gaussian(histogram_l[i], is, vc) * gaussian(length(ipos), ss, 0.0);
-		histogram_wn[i] = 0.0;
-	}
-	
-	for (int i=0; i<KERNELLEN; i++) {
-		histogram_wn[i] += gaussian(0.0, HISTOGRAM_REGULARIZATION, 0.0) * histogram_w[i];
-		for (int j=(i+1); j<KERNELLEN; j++) {
-			float d = gaussian(histogram_l[j], HISTOGRAM_REGULARIZATION, histogram_l[i]);
-			histogram_wn[j] += d * histogram_w[i];
-			histogram_wn[i] += d * histogram_w[j];
-		}
-	}
-	
-	return getMode(histogram_v, histogram_wn);
+    vec4 histogram_v[KERNELLEN];
+    float histogram_l[KERNELLEN];
+    float histogram_w[KERNELLEN];
+    float histogram_wn[KERNELLEN];
+
+    float vc = LINELUMA_tex(HOOKED_pos).x;
+
+    float is = pow(vc + 0.0001, INTENSITY_POWER_CURVE) * INTENSITY_SIGMA;
+    float ss = SPATIAL_SIGMA;
+
+    for (int i=0; i<KERNELLEN; i++) {
+        vec2 ipos = GETOFFSET(i);
+        histogram_v[i] = HOOKED_texOff(ipos);
+        histogram_l[i] = LINELUMA_texOff(ipos).x;
+        histogram_w[i] = gaussian(histogram_l[i], is, vc) * gaussian(length(ipos), ss, 0.0);
+        histogram_wn[i] = 0.0;
+    }
+
+    for (int i=0; i<KERNELLEN; i++) {
+        histogram_wn[i] += gaussian(0.0, HISTOGRAM_REGULARIZATION, 0.0) * histogram_w[i];
+        for (int j=(i+1); j<KERNELLEN; j++) {
+            float d = gaussian(histogram_l[j], HISTOGRAM_REGULARIZATION, histogram_l[i]);
+            histogram_wn[j] += d * histogram_w[i];
+            histogram_wn[i] += d * histogram_w[j];
+        }
+    }
+
+    return getMode(histogram_v, histogram_wn);
 }
