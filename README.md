@@ -96,7 +96,7 @@ If you also want to uninstall MPV itself, follow the instruction from where you 
 
 [shaders\Anime4K\_\*.glsl](https://github.com/bloc97/Anime4K)
 
-[shaders\KrigBilateral.glsl](https://github.com/awused/dotfiles/blob/master/mpv/.config/mpv/shaders/KrigBilateral.glsl)
+[~~shaders\KrigBilateral.glsl~~](https://github.com/awused/dotfiles/blob/master/mpv/.config/mpv/shaders/KrigBilateral.glsl)
 
 Inspired by [mpv-lazy](https://github.com/hooke007/mpv_PlayKit).
 
