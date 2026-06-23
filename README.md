@@ -32,8 +32,6 @@ Visit [YT-DLP website](https://github.com/yt-dlp/yt-dlp) for more information.
 
 ```
 [script-opts.conf]
-  YT-DLP path:
-    # script-opts-append = ytdl_hook-ytdl_path=~/tools/mpv/yt-dlp.exe
   YT-DLP cookies:
     # ytdl-raw-options-append = cookies-from-browser=firefox
     ytdl-raw-options-append = cookies=~\Documents\ytdlcookies.txt
