@@ -374,7 +374,7 @@ function TopBar:render()
 				local remaining_human = format_time(remaining_time, math.abs(remaining_time))
 				local opts = {
 					size = round(self.chapter_size * 0.77),
-					italic = false,
+					italic = true,
 					wrap = 2,
 					color = bgt,
 					border = options.text_border * state.scale,
