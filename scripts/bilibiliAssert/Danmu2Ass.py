@@ -12,12 +12,13 @@ import math
 import os
 from pickle import TRUE
 import random
-from re import sub, compile
+from re import sub, compile, error as RegexError
 import sys
 import xml.etree.cElementTree as ET
 import ssl
 import zlib
 from urllib import request
+from urllib.error import HTTPError, URLError
 import time
 from platform import platform
 
@@ -132,7 +133,7 @@ def WriteCommentBilibiliPositioned(f, c, width, height, styleid):
         if isborder == 'false':
             styles.append('\\bord0')
         f.write('Dialogue: -1,%(start)s,%(end)s,%(styleid)s,,0,0,0,,{%(styles)s}%(text)s\n' % {'start': ConvertTimestamp(c[0]), 'end': ConvertTimestamp(c[0] + lifetime), 'styles': ''.join(styles), 'text': text, 'styleid': styleid})
-    except (IndexError, ValueError) as e:
+    except (IndexError, TypeError, ValueError) as e:
         try:
             logging.warning(_('Invalid comment: %r') % c[3])
         except IndexError:
@@ -433,19 +434,21 @@ def export(func):
 
 def getComments(cid,font_size = 25):
     try:
-        response = request.urlopen(request.Request(
+        with request.urlopen(request.Request(
             url = ''.join(['https://comment.bilibili.com/', cid[0], '.xml']),
             headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0',
                 'Referer': 'https://www.bilibili.com'
             }
-        ), context=ssl.create_default_context())
-        data = str(zlib.decompress(response.read(), -zlib.MAX_WBITS), "utf-8")
-        response.close()
-    except urllib.error.HTTPError as e:
-        print(f"HTTP Error occurred: {e}")
+        ), timeout=10, context=ssl.create_default_context()) as response:
+            data = str(zlib.decompress(response.read(), -zlib.MAX_WBITS), "utf-8")
+    except HTTPError as e:
+        print(f"HTTP Error occurred: {e}", file=sys.stderr)
         if e.code == 412:
-            print("412 Precondition Failed: 服务器上的资源不满足请求中的前提条件。")
+            print("412 Precondition Failed: 服务器上的资源不满足请求中的前提条件。", file=sys.stderr)
+        sys.exit(1)
+    except (URLError, TimeoutError) as e:
+        print(f"Download failed: {e}", file=sys.stderr)
         sys.exit(1)
     comments = []
     str_io = io.StringIO(data)
@@ -457,19 +460,19 @@ def getComments(cid,font_size = 25):
 def write2file(comments, directory, stage_width, stage_height,reserve_blank=0, font_face=_('(FONT) sans-serif')[7:], font_size=25.0, text_opacity=1.0, duration_marquee=5.0, duration_still=5.0, comment_filter=None, comment_filters_file=None, is_reduce_comments=False, progress_callback=None):
     filters_regex = []
 
-    if comment_filter and ( comment_filters or comment_filters_file):
-        comment_filters = [comment_filter]
-        if comment_filters_file:
-            with open(comment_filters_file, 'r', encoding='utf-8') as f:
-                d = f.readlines()
-                comment_filters.extend([i.strip() for i in d])
+    comment_filters = []
+    if comment_filter:
+        comment_filters.append(comment_filter)
+    if comment_filters_file:
+        with open(comment_filters_file, 'r', encoding='utf-8') as f:
+            comment_filters.extend(i.strip() for i in f)
 
-        for comment_filter in comment_filters:
+    for comment_filter in comment_filters:
+        if comment_filter:
             try:
-                if comment_filter:
-                    filters_regex.append(compile(comment_filter))
-            except:
-                raise ValueError(_('Invalid regular expression: %s') % comment_filter)
+                filters_regex.append(compile(comment_filter))
+            except RegexError as e:
+                raise ValueError(_('Invalid regular expression: %s') % comment_filter) from e
 
     ass_path = ''.join([directory, '/bilibili.ass'])
 
